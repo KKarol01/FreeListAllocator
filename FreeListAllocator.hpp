@@ -24,7 +24,7 @@ class FreeListAllocator {
     constexpr FreeListAllocator() = default;
 
     FreeListAllocator(void* data, size_t size) {
-        assert(data);
+        if(!data) { return; }
         assert(size >= sizeof(PoolHeader) && "Memory pool size too small. Must be at least sizeof(MemoryPool)");
 
         const size_t header_size_aligned = align_up2(sizeof(PoolHeader), ALIGNMENT);
