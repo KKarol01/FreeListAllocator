@@ -33,6 +33,8 @@ class FreeListAllocator {
     }
 
     void* allocate(size_t size) {
+        if(!pool) { return nullptr; }
+
         const size_t unaligned_alloc = calc_required_size(size);
         const size_t alloc_size = align_up2(unaligned_alloc, ALIGNMENT);
         size_t padding = alloc_size - unaligned_alloc;
@@ -63,6 +65,7 @@ class FreeListAllocator {
     }
 
     void deallocate(void* alloc) {
+        if(!pool) { return; }
         if(!alloc) { return; }
         assert(alloc >= pool && alloc <= reinterpret_cast<std::byte*>(pool) + pool->size);
 
@@ -87,6 +90,7 @@ class FreeListAllocator {
 
     /*Tries to find best free list size. If allocation is too big for all of them, returns the largest one*/
     size_t try_get_best_fit_size(size_t size) const {
+        if(!pool) { return 0; }
         const size_t alloc_size = align_up2(calc_required_size(size), ALIGNMENT);
         FreeHeader* node = pool->free;
         size_t best_size = 0;
