@@ -1,5 +1,5 @@
 # Free list allocator
-Uses in-memory headers and linked list for free blocks. Aligned to alignof(max_align_t). Doesn't support allocations with alignment greater than 8.
+Uses in-memory headers and linked list for free blocks. Aligned to alignof(max_align_t). Doesn't support allocations with alignment greater than that.
 Doesn't free the pool's memory on instance destruction.
 
 ## How to use:
