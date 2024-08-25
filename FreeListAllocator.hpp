@@ -1,7 +1,9 @@
 #pragma once
 
 #include <new>
+#ifndef NDEBUG
 #include <cassert>
+#endif // !NDEBUG
 
 class FreeListAllocator {
     struct AllocationHeader {
