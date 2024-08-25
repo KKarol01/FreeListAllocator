@@ -25,12 +25,9 @@ class FreeListAllocator {
         assert(data);
         assert(size >= sizeof(PoolHeader) && "Memory pool size too small. Must be at least sizeof(MemoryPool)");
 
-        pool = new (data) PoolHeader{};
         const size_t header_size_aligned = align_up2(sizeof(PoolHeader), ALIGNMENT);
         const size_t free_size = size - header_size_aligned;
-        pool->free = new (offset_ptr(data, header_size_aligned)) FreeHeader{ nullptr, free_size };
-        pool->size = size;
-        pool->used = 0;
+        pool = new (data) PoolHeader{ new (offset_ptr(data, header_size_aligned)) FreeHeader{ nullptr, free_size }, size, 0 };
     }
 
     void* allocate(size_t size) {
