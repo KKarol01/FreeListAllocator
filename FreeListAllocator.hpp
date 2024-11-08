@@ -117,6 +117,12 @@ class FreeListAllocator {
 
     size_t get_total_free_memory() const { return pool->size - pool->used - sizeof(PoolHeader); }
 
+    void* release_memory() { return std::exchange(pool, nullptr); }
+
+    size_t get_offset_bytes(const void* alloc) const {
+        return reinterpret_cast<uintptr_t>(alloc) - reinterpret_cast<uintptr_t>(pool);
+    }
+
   private:
     void insert_new_free_block(FreeHeader* prev_node, FreeHeader* new_node) {
         if(!prev_node) {
@@ -176,6 +182,7 @@ class FreeListAllocator {
         assert(size > 0);
         assert((any_pow_2 & (any_pow_2 - 1)) == 0 && "any_pow_2 must be non negative power of two");
         return (size + any_pow_2 - 1) & ~(any_pow_2 - 1);
+        /*             -------------    ----------------                                                         */
         /*                ^                  ^-- removes the surplus past the nearest next multiple of alignment */
         /*                |--- only overflows to the next multiple if it's not already one of */
     }
